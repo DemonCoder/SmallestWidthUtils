@@ -15,11 +15,13 @@ public class MakeUtils {
     private static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n";
     private static final String XML_RESOURCE_START = "<resources>\r\n";
     private static final String XML_RESOURCE_END = "</resources>\r\n";
-    private static final String XML_DIMEN_TEMPLETE = "<dimen name=\"dp_%1$d\">%2$.2fdp</dimen>\r\n";
+    private static final String XML_DIMEN_TEMPLETE = "\t<dimen name=\"dp_%1$d\">%2$.2fdp</dimen>\r\n";
+    private static final String XML_DIMEN_SP_TEMPLETE = "\t<dimen name=\"sp_%1$d\">%2$.2fsp</dimen>\r\n";
 
 
-    private static final String XML_BASE_DPI = "<dimen name=\"base_dpi\">%ddp</dimen>\r\n";
+    private static final String XML_BASE_DPI = "\t<dimen name=\"base_dpi\">%ddp</dimen>\r\n";
     private static final int MAX_SIZE = 812;//最大dp值
+    private static final int MAX_SP_SIZE = 72;//最大SP值
 
     /**
      * 生成的文件名
@@ -43,6 +45,7 @@ public class MakeUtils {
      */
     private static String makeAllDimens(DimenTypes type, int designWidth) {
         float dpValue;
+        float spValue;
         String temp;
         StringBuilder sb = new StringBuilder();
         try {
@@ -51,13 +54,18 @@ public class MakeUtils {
             //备份生成的相关信息
             temp = String.format(XML_BASE_DPI, type.getSwWidthDp());
             sb.append(temp);
+            //生成dp
             for (int i = 0; i <= MAX_SIZE; i++) {
-
                 dpValue = calcDp((float) i, type.getSwWidthDp(), designWidth);
                 temp = String.format(XML_DIMEN_TEMPLETE, i, dpValue);
                 sb.append(temp);
             }
-
+            //生成sp
+            for (int i = 0; i <= MAX_SP_SIZE; i++) {
+                spValue = calcDp((float) i, type.getSwWidthDp(), designWidth);
+                temp = String.format(XML_DIMEN_SP_TEMPLETE, i, spValue);
+                sb.append(temp);
+            }
 
             sb.append(XML_RESOURCE_END);
         } catch (Exception e) {
